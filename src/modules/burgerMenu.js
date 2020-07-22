@@ -2,12 +2,14 @@ const burgerMenu = () => {
   const popupDialogMenu = document.querySelector('.popup-dialog-menu');
 
   const setStartingPosition = (elem) => {
-    if (document.documentElement.clientWidth < 576 && elem.style.right != 0) {
-      elem.style.transition = '0';
-      elem.style.cssText = `top: -${elem.clientHeight}px; right: ${elem.clientWidth}px`;
-      elem.style.transition = '1s';
-    } else {
-      elem.style.cssText = '';
+    if (elem.style.right != 0) {
+      if (document.documentElement.clientWidth < 576) {
+        elem.style.transition = '0';
+        elem.style.cssText = `top: -${elem.clientHeight}px; right: ${elem.clientWidth}px`;
+        elem.style.transition = '1s';
+      } else {
+        elem.style.cssText = '';
+      }
     }
   };
 
