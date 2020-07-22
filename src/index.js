@@ -7,6 +7,7 @@ import fullList from './modules/fullList';
 import phoneMask from './modules/phoneMask';
 import privacyPolicy from './modules/privacyPolicy';
 import consult from './modules/consult';
+import accordeon from './modules/accordeon';
 
 phoneAccordeon();
 burgerMenu();
@@ -15,3 +16,4 @@ fullList();
 phoneMask();
 privacyPolicy();
 consult();
+accordeon();
