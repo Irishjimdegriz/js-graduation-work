@@ -109,11 +109,22 @@ const initSliders = () => {
     wrap: '.formula-slider',
     next: '#formula-arrow_right',
     prev: '#formula-arrow_left',
+    slidesToShow: 3,
     activeItemClass: 'active-item'
 });
   formulaSlider.init();
 
   const repairTypesSliders = document.querySelectorAll('[class^="types=repair"]');
+
+  const partnersSlider = new Slider({
+    main: '.partners>.wrapper',
+    wrap: '.partners-slider',
+    next: '#partners-arrow_right',
+    prev: '#partners-arrow_left',
+    slidesToShow: 3
+});
+
+    partnersSlider.init();
 };
 
 export default initSliders;
