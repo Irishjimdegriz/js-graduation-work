@@ -11,6 +11,7 @@ import privacyPolicy from './modules/privacyPolicy';
 import hint from './modules/hint';
 import initSliders from './modules/initSliders';
 import consult from './modules/consult';
+import howWeWorkTabs from './modules/howWeWorkTabs';
 import accordeon from './modules/accordeon';
 
 phoneAccordeon();
@@ -22,4 +23,5 @@ privacyPolicy();
 hint();
 initSliders();
 consult();
+howWeWorkTabs();
 accordeon();
