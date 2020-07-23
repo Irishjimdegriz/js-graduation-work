@@ -1,6 +1,6 @@
 const hint = () => {
   const formulaIcons = document.querySelectorAll('.formula-item__icon');
-
+  console.log(formulaIcons.length);
   formulaIcons.forEach(item => {
     item.addEventListener('mouseenter', (event) => {
       event.target.closest('.formula-item').classList.add('active-item');
