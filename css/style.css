@@ -6481,3 +6481,15 @@ strong {
 
 .slider-dots {
   display: none; }
+
+.row-popup {
+  z-index: 1;
+}
+
+.popup-rotated {
+  top: 150px;
+}
+
+.popup-rotated:before {
+  transform: rotateZ(180deg);
+}

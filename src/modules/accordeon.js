@@ -8,8 +8,6 @@ const accordeon = () => {
           });
         };
 
-  hideAllItems();
-
   accordeonBlock.addEventListener('click', (event) => {
     let target = event.target.closest('.title_block');
     if (target) {
@@ -24,12 +22,6 @@ const accordeon = () => {
       if (!allHidden) {
         target.classList.add('msg-active');
       }
-
-      //console.dir(event.target);
-      // event.target.nextElementSibling.style.cssText = `max-height: auto;
-      //                                                  opacity: 1;
-      //                                                  -webkit-transform: none;
-      //                                                  transform: none;`;
     }
   });
 };
