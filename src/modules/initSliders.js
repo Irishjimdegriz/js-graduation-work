@@ -249,6 +249,8 @@ const initSliders = () => {
   });
 
   popupDocumentsSlider.init();
+  popupDocumentsSlider.prev.style.visibility = 'hidden';
+  popupDocumentsSlider.next.style.visibility = 'hidden';
 
   const docsPopup = document.querySelector('.popup-transparency');
   
@@ -264,9 +266,57 @@ const initSliders = () => {
       docsPopup.style.visibility = 'visible';
     } else if (!event.target.closest('.popup-dialog-transparency') || event.target.closest('.popup-dialog-transparency>.close')) {
       docsPopup.style.visibility = 'hidden';
+      popupDocumentsSlider.prev.style.visibility = 'hidden';
+      popupDocumentsSlider.next.style.visibility = 'hidden';
     }
   });  
   
+  const portfolioPopupSlider = new Slider({
+    main: '.popup-portfolio-slider-wrap',
+    wrap: '.popup-portfolio-slider',
+    next: '#popup_portfolio_right',
+    prev: '#popup_portfolio_left',
+    slideSelector: '.popup-portfolio-slider__slide',
+    counterSelector: '#popup-portfolio-counter',
+    //reviewsSlider: true,
+    infinity: false
+  });
+
+  portfolioPopupSlider.init();
+  portfolioPopupSlider.prev.style.visibility = 'hidden';
+  portfolioPopupSlider.next.style.visibility = 'hidden';
+
+  const portfolioPopup = document.querySelector('.popup-portfolio'),
+        texts = document.querySelectorAll('.popup-portfolio-text');
+
+  document.addEventListener('click', (event) => {
+    if (event.target.closest('.portfolio-slider__slide-frame')) {
+      const docs = document.querySelectorAll('.portfolio-slider__slide-frame');
+
+      docs.forEach((item, i) => {
+        if (item === event.target.closest('.portfolio-slider__slide-frame')) {
+          portfolioPopupSlider.setPosition(i - portfolioPopupSlider.slides.length);
+          texts[i - portfolioPopupSlider.slides.length].style.display = 'block';
+        }
+      });
+
+      portfolioPopup.style.visibility = 'visible';
+    } else if (!event.target.closest('.popup-dialog-portfolio') || event.target.closest('.popup-dialog-portfolio>.close')) {
+      portfolioPopup.style.visibility = 'hidden';
+      portfolioPopupSlider.prev.style.visibility = 'hidden';
+      portfolioPopupSlider.next.style.visibility = 'hidden';
+    }
+  });  
+
+  const updateText = () => {
+    texts.forEach((item, i) => {
+      item.style.display = portfolioPopupSlider.options.position === i ? "block" : 'none';
+    });
+  }
+  
+  portfolioPopupSlider.prev.addEventListener('click', updateText);
+  portfolioPopupSlider.next.addEventListener('click', updateText);
+
 
   const reviewsSlider = new Slider({
     main: '.reviews-slider-wrap',
