@@ -1,11 +1,12 @@
 class Slider{
-  constructor({main, wrap, position = 0, next, prev, slideSelector, slidesToShow = 1, infinity = true, activeItemClass = '', reviewsSlider = false, breakpoints = null}){
+  constructor({main, wrap, position = 0, next, prev, slideSelector, counterSelector = null, slidesToShow = 1, infinity = true, activeItemClass = '', reviewsSlider = false, breakpoints = null}){
       this.main = document.querySelector(main);
       this.mainSelector = main;
       this.wrap = document.querySelector(wrap);
       this.wrapSelector = wrap;
       this.slides = document.querySelector(wrap).children;
       this.slideSelector = slideSelector;
+      this.counterSelector = counterSelector;
       this.next = document.querySelector(next);
       this.prev = document.querySelector(prev);
       this.slidesToShow = slidesToShow;
@@ -29,15 +30,32 @@ class Slider{
       }
       
       this.controlSlider();
-      this.updateArrowVisibility();
-
+      this.renderControls();
       this.initAdaptive();
+      
+    }
 
-      // if (!this.options.infinity) {
-      //   this.prev.style.visibility= 'hidden';
-      // }
+  setPosition(position) {
+    this.options.position = position;
+    this.updateSlideVisibility(`translateX(-${this.options.position * this.options.slideWidth}%)`);
+    this.renderControls();
+  }
+    
+  renderControls() {
+    this.updateArrowVisibility();
+    this.updateCounter();
+  }
 
+  updateCounter() {
+    if (this.counterSelector !== null) {
+      console.log(`${this.counterSelector}>.slider-counter-content`);
+      const content = document.querySelector(`${this.counterSelector}>.slider-counter-content`),
+            currentSlide = content.querySelector('.slider-counter-content__current'),
+            totalSlides = content.querySelector('.slider-counter-content__total');
 
+      currentSlide.textContent = (this.options.position + 1).toString();
+      totalSlides.textContent = (this.slides.length).toString();
+    }
   }
 
   initAdaptive() {
@@ -65,16 +83,7 @@ class Slider{
         recalculateParams();
 
         this.updateSlideVisibility('');
-        this.updateArrowVisibility();
-
-        // if (this.reviewsSlider) {
-        //   for (let slide of this.slides) {
-        //     slide.style.transform = '';
-        //   }
-        // } else {
-        //   console.log('here');
-        //   this.wrap.style.transform = '';
-        // }
+        this.renderControls();
       });
     }
   }
@@ -103,12 +112,6 @@ class Slider{
   }
 
   addGloClass() {
-      // this.main.classList.add('glo-slider');
-      // this.wrap.classList.add('glo-slider__wrap');
-
-      // for(let item of this.slides) {
-      //   item.classList.add('glo-slider__item');
-      // }
   }
 
   addSlyles() {
@@ -131,19 +134,10 @@ class Slider{
           }
 
           this.updateSlideVisibility(`translateX(-${this.options.position * this.options.slideWidth}%)`);
-
-          // if (this.reviewsSlider) {
-          //   for (let slide of this.slides) {
-          //     slide.style.transform = `translateX(-${this.options.position * this.options.slideWidth}%)`;
-          //   }
-          // } else {
-          //   this.wrap.style.transform = `translateX(-${this.options.position * this.options.slideWidth}%)`;
-          // }
       }
 
-      this.updateArrowVisibility();
-      
       this.highlightActiveItem();
+      this.renderControls();
   }
 
   nextSlider() {
@@ -155,11 +149,8 @@ class Slider{
 
           this.updateSlideVisibility(`translateX(-${this.options.position * this.options.slideWidth}%)`);
 
-          //this.wrap.style.transform = `translateX(-${this.options.position * this.options.slideWidth}%)`;  
-             
-          this.updateArrowVisibility();
-
           this.highlightActiveItem();
+          this.renderControls();
       }
   }
 
@@ -220,20 +211,62 @@ const initSliders = () => {
   formulaSlider.init();
 
   const repairTypesSliders = document.querySelectorAll('[class^="types=repair"]');
-  /*if (window.innerWidth < 1090)*/ {
-    const documentsSlider = new Slider({
-      main: '.transparency-slider-wrap',
-      wrap: '.transparency-slider',
-      next: '#transparency-arrow_right',
-      prev: '#transparency-arrow_left',
-      slideSelector: '.transparency-item',
-      //reviewsSlider: true,
-      infinity: false,
-      breakpoints: {"1080" : 3, "0" : 1}
-    });
 
-    documentsSlider.init();
-  }
+  // const portfolioSlider = new Slider({
+  //   main: '.portfolio-slider-wrapper',
+  //   wrap: '.portfolio-slider',
+  //   next: '#portfolio-arrow_right',
+  //   prev: '#portfolio-arrow_left',
+  //   slideSelector: '.portfolio-slider__slide',
+  //   reviewsSlider: true,
+  //   infinity: false,
+  //   //breakpoints: {"1080" : 3, "0" : 1}
+  // });
+
+  // portfolioSlider.init();
+
+  const documentsSlider = new Slider({
+    main: '.transparency-slider-wrap',
+    wrap: '.transparency-slider',
+    next: '#transparency-arrow_right',
+    prev: '#transparency-arrow_left',
+    slideSelector: '.transparency-item',
+    infinity: false,
+    breakpoints: {"1080" : 3, "0" : 1}
+  });
+
+  documentsSlider.init();
+
+  const popupDocumentsSlider = new Slider({
+    main: '.popup-transparency-slider-wrap',
+    wrap: '.popup-transparency-slider',
+    next: '#transparency_right',
+    prev: '#transparency_left',
+    slideSelector: '.popup-transparency-slider__slide',
+    counterSelector: '#transparency-popup-counter',
+    reviewsSlider: true,
+    infinity: false
+  });
+
+  popupDocumentsSlider.init();
+
+  const docsPopup = document.querySelector('.popup-transparency');
+  
+  document.addEventListener('click', (event) => {
+    if (event.target.closest('.transparency-item')) {
+      const docs = document.querySelectorAll('.transparency-item');
+      docs.forEach((item, i) => {
+        if (item === event.target.closest('.transparency-item')) {
+          popupDocumentsSlider.setPosition(i);
+        }
+      });
+
+      docsPopup.style.visibility = 'visible';
+    } else if (!event.target.closest('.popup-dialog-transparency') || event.target.closest('.popup-dialog-transparency>.close')) {
+      docsPopup.style.visibility = 'hidden';
+    }
+  });  
+  
 
   const reviewsSlider = new Slider({
     main: '.reviews-slider-wrap',
