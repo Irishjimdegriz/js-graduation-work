@@ -9,7 +9,7 @@ function maskPhone(selector, masked = '+7 (___) ___-__-__') {
 		console.log(template);
 		let i = 0,
 			newValue = template.replace(/[_\d]/g, function (a) {
-				return i < val.length ? val.charAt(i++) || def.charAt(i) : a;
+				return i < def.length ? def.charAt(i++) : (i < val.length ? val.charAt(i++) || def.charAt(i) : a);
 			});
 		i = newValue.indexOf("_");
 		if (i != -1) {
