@@ -3,7 +3,7 @@ const burgerMenu = () => {
 
   const setStartingPosition = (elem) => {
     if (elem.style.right != 0) {
-      if (document.documentElement.clientWidth < 576) {
+      if (window.innerWidth < 576) {
         elem.style.transition = '0';
         elem.style.cssText = `top: -${elem.clientHeight}px; right: ${elem.clientWidth}px`;
         elem.style.transition = '1s';
@@ -26,9 +26,9 @@ const burgerMenu = () => {
     if (target.closest('.menu')) {
       popupDialogMenu.style.cssText = `top: 0px; 
                                        right: ${popupDialogMenu.clientWidth}px;
-                                       ${document.documentElement.clientWidth < 576 ? "transform: translate3d(0,0,0)" : ""}`;
+                                       ${window.innerWidth < 576 ? "transform: translate3d(0,0,0)" : ""}`;
     } else {
-      if (!target.closest('.popup-dialog-menu') || target.closest('.popup-menu-nav') || target.closest('.close-menu')) {
+      if (!target.closest('.popup-dialog-menu') || target.closest('.menu-link') || target.closest('.close-menu')) {
         setStartingPosition(popupDialogMenu);
       }
     }
