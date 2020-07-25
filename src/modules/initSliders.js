@@ -205,6 +205,8 @@ class Slider{
 
   updateSlideVisibility(styleText) {
     if (this.reviewsSlider) {
+      const slides = document.querySelectorAll(this.slideSelector);
+
       for (let slide of this.slides) {
         slide.style.transform = styleText;
       }
@@ -218,21 +220,25 @@ class Slider{
   }
 
   updateArrowVisibility() {
+    const prev = document.querySelector(this.prevSelector),
+          next = document.querySelector(this.nextSelector);
+
+
     if (!this.options.infinity) {
       if (this.options.position === 0) {
-        this.prev.style.visibility = 'hidden';
+        prev.style.visibility = 'hidden';
       } else {
-        this.prev.style.visibility = 'visible';
+        prev.style.visibility = 'visible';
       }
 
       if (this.options.position === this.slides.length - this.slidesToShow) {
-          this.next.style.visibility = 'hidden';
+        next.style.visibility = 'hidden';
       } else {
-        this.next.style.visibility = 'visible';
+        next.style.visibility = 'visible';
       }
     } else {
-      document.querySelector(this.prevSelector).style.visibility = 'visible';
-      document.querySelector(this.nextSelector).style.visibility = 'visible';
+      prev.style.visibility = 'visible';
+      next.style.visibility = 'visible';
     }
   }
 
@@ -252,6 +258,30 @@ class Slider{
 }
 
 const initSliders = () => {
+  const initNavSlider = (main, wrap, next, prev, slideSelector, fromPopup = false) => {
+    const navSlider = new Slider({
+      main,
+      wrap,
+      next,
+      prev,
+      slideSelector,
+      reviewsSlider: true,
+      infinity: false,
+      noflex: true,
+      breakpoints: {"1024" : 5, "0" : 2},
+      scrollByPixels: {"step": 170, "stepCount": 3}
+    });
+
+    navSlider.init();
+
+    if (fromPopup) {
+      navSlider.hide();
+    }
+
+    return navSlider;
+  };
+
+
   const formulaSlider = new Slider({
     main: '.formula-slider-wrap',
     wrap: '.formula-slider',
@@ -301,20 +331,7 @@ const initSliders = () => {
     }
   });
 
-  const repairTypesButtonsSlider = new Slider({
-    main: '.repair-types-nav',
-    wrap: '.nav-list-repair',
-    next: '#nav-arrow-repair-right_base',
-    prev: '#nav-arrow-repair-left_base',
-    slideSelector: '.repair-types-nav__item',
-    reviewsSlider: true,
-    infinity: false,
-    noflex: true,
-    breakpoints: {"1024" : 5, "0" : 2},
-    scrollByPixels: {"step": 170, "stepCount": 3}
-  });
-
-  repairTypesButtonsSlider.init();
+  initNavSlider('.repair-types-nav', '.nav-list-repair', '#nav-arrow-repair-right_base', '#nav-arrow-repair-left_base', '.repair-types-nav__item');
 
   const designSliders = [];
   for (let i = 1; i <= 5; i++) {
@@ -378,19 +395,8 @@ const initSliders = () => {
     }
   });
 
-  const designButtonsSlider = new Slider({
-    main: '.nav-designs',
-    wrap: '.nav-list-designs',
-    next: '#nav-arrow-designs_right',
-    prev: '#nav-arrow-designs_left',
-    reviewsSlider: true,
-    infinity: false,
-    noflex: true,
-    breakpoints: {"1024" : 5, "0" : 2},
-    scrollByPixels: {"step": 170, "stepCount": 3}
-  });
-
-  designButtonsSlider.init();
+  initNavSlider('.nav-designs', '#designs-list', '#nav-arrow-designs_right', '#nav-arrow-designs_left');
+  const designPopupButtonsSlider = initNavSlider('.nav-popup-designs', '#nav-list-popup-designs', '#nav-arrow-popup-designs_right', '#nav-arrow-popup-designs_left', null, true);
 
   const popupDesignSliders = [];
   for (let i = 1; i <= 5; i++) {
@@ -417,8 +423,8 @@ const initSliders = () => {
 
   document.addEventListener('click', (event) => {
     if (event.target.closest('.link-list-designs')) {
-      popupDesignSliders[0].show();
       designPopup.style.visibility = 'visible';
+      popupDesignSliders[0].show();
       designPopupButtonsSlider.show();
     } else if (!event.target.closest('.popup-dialog-design') || event.target.closest('.popup-dialog-design>.close')) {
       designPopup.style.visibility = 'hidden';
@@ -443,21 +449,6 @@ const initSliders = () => {
       }
     }
   });
-
-  const designPopupButtonsSlider = new Slider({
-    main: '.nav-popup-designs',
-    wrap: '#nav-list-popup-designs',
-    next: '#nav-arrow-popup-designs_right',
-    prev: '#nav-arrow-popup-designs_left',
-    reviewsSlider: true,
-    infinity: false,
-    noflex: true,
-    breakpoints: {"1024" : 5, "0" : 2},
-    scrollByPixels: {"step": 170, "stepCount": 3}
-  });
-
-  designPopupButtonsSlider.init();
-  designPopupButtonsSlider.hide();
 
   const documentsSlider = new Slider({
     main: '.transparency-slider-wrap',
@@ -575,6 +566,5 @@ const initSliders = () => {
 
     partnersSlider.init();
 };
-
 
 export default initSliders;
