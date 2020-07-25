@@ -48,8 +48,13 @@ class Slider{
     if (this.prevSelector !== null && this.nextSelector !== null) {
       this.clearControl(this.prevSelector);
       this.clearControl(this.nextSelector);
+      this.prev = document.querySelector(this.prevSelector);
+      this.next = document.querySelector(this.nextSelector);
       this.prev.style.visibility = 'hidden';
       this.next.style.visibility = 'hidden';
+      //document.querySelector(this.nextSelector).style.visibility = 'hidden';
+      //this.prev
+      //this.next.style.visibility = 'hidden';
     }
   }
 
@@ -57,6 +62,7 @@ class Slider{
     let oldElement = document.querySelector(elem);
     let newElement = oldElement.cloneNode(true);
     oldElement.parentNode.replaceChild(newElement, oldElement);
+
   }
 
   show() {
@@ -200,10 +206,10 @@ class Slider{
   updateSlideVisibility(styleText) {
     if (this.reviewsSlider) {
       for (let slide of this.slides) {
-        slide.style.transform = styleText;// `translateX(-${this.options.position * this.options.slideWidth}%)`;
+        slide.style.transform = styleText;
       }
     } else {
-      this.wrap.style.transform = styleText;//`translateX(-${this.options.position * this.options.slideWidth}%)`;
+      this.wrap.style.transform = styleText;
     }
 
     if (styleText === '') {
@@ -214,21 +220,24 @@ class Slider{
   updateArrowVisibility() {
     if (!this.options.infinity) {
       if (this.options.position === 0) {
-        this.prev.style.visibility= 'hidden';
+        this.prev.style.visibility = 'hidden';
       } else {
-        this.prev.style.visibility= 'visible';
+        this.prev.style.visibility = 'visible';
       }
 
       if (this.options.position === this.slides.length - this.slidesToShow) {
-          this.next.style.visibility= 'hidden';
+          this.next.style.visibility = 'hidden';
       } else {
-        this.next.style.visibility= 'visible';
+        this.next.style.visibility = 'visible';
       }
+    } else {
+      document.querySelector(this.prevSelector).style.visibility = 'visible';
+      document.querySelector(this.nextSelector).style.visibility = 'visible';
     }
   }
 
   highlightActiveItem() {
-    if (this.options.activeItemClass != '') {
+    if (this.options.activeItemClass !== '') {
       for (let slide of this.slides) {
         slide.classList.remove(this.options.activeItemClass);
       }
@@ -470,13 +479,12 @@ const initSliders = () => {
     slideSelector: '.popup-transparency-slider__slide',
     counterSelector: '#transparency-popup-counter',
     reviewsSlider: true,
-    infinity: false
+    infinity: false,
+    isHorizontal: false
   });
 
   popupDocumentsSlider.init();
   popupDocumentsSlider.hide();
-  popupDocumentsSlider.prev.style.visibility = 'hidden';
-  popupDocumentsSlider.next.style.visibility = 'hidden';
 
   const docsPopup = document.querySelector('.popup-transparency');
   
@@ -492,6 +500,7 @@ const initSliders = () => {
 
       docsPopup.style.visibility = 'visible';
     } else if (!event.target.closest('.popup-dialog-transparency') || event.target.closest('.popup-dialog-transparency>.close')) {
+      popupDocumentsSlider.hide();
       docsPopup.style.visibility = 'hidden';
       popupDocumentsSlider.prev.style.visibility = 'hidden';
       popupDocumentsSlider.next.style.visibility = 'hidden';
@@ -511,8 +520,6 @@ const initSliders = () => {
 
   portfolioPopupSlider.init();
   portfolioPopupSlider.hide();
-  portfolioPopupSlider.prev.style.visibility = 'hidden';
-  portfolioPopupSlider.next.style.visibility = 'hidden';
 
   const portfolioPopup = document.querySelector('.popup-portfolio'),
         texts = document.querySelectorAll('.popup-portfolio-text');
@@ -533,8 +540,6 @@ const initSliders = () => {
     } else if (!event.target.closest('.popup-dialog-portfolio') || event.target.closest('.popup-dialog-portfolio>.close')) {
       portfolioPopup.style.visibility = 'hidden';
       portfolioPopupSlider.hide();
-      portfolioPopupSlider.prev.style.visibility = 'hidden';
-      portfolioPopupSlider.next.style.visibility = 'hidden';
     }
   });  
 
@@ -546,7 +551,6 @@ const initSliders = () => {
   
   portfolioPopupSlider.prev.addEventListener('click', updateText);
   portfolioPopupSlider.next.addEventListener('click', updateText);
-
 
   const reviewsSlider = new Slider({
     main: '.reviews-slider-wrap',
@@ -571,5 +575,6 @@ const initSliders = () => {
 
     partnersSlider.init();
 };
+
 
 export default initSliders;
