@@ -1,46 +1,35 @@
 class Slider{
-  constructor({main, wrap, position = 0, next = null, prev = null, slideSelector, counterSelector = null, slidesToShow = 1, infinity = true, activeItemClass = '', reviewsSlider = false, breakpoints = null, repairTypesSlider = false, isHorizontal = true, noFlex = false, scrollByPixels = null, portfolioSlider = false}){
+  constructor({main, wrap, position = 0, next = null, prev = null, slideSelector, counterSelector = null, slidesToShow = 1, infinity = true, reviewsSlider = false, breakpoints = null, noFlex4Wrap = false, isHorizontal = true, noFlex = false, scrollByPixels = null, fixedWidth = false}){
       this.main = document.querySelector(main);
-      this.mainSelector = main;
       this.wrap = document.querySelector(wrap);
-      this.wrapSelector = wrap;
       this.slides = document.querySelector(wrap).children;
+      this.mainSelector = main;
+      this.wrapSelector = wrap;
+      this.nextSelector = next;
+      this.prevSelector = prev;
       this.slideSelector = slideSelector;
       this.counterSelector = counterSelector;
-      this.next = document.querySelector(next);
-      this.nextSelector = next;
-      this.prev = document.querySelector(prev);
-      this.prevSelector = prev;
       this.slidesToShow = slidesToShow;
       this.reviewsSlider = reviewsSlider;
-      this.repairTypesSlider = repairTypesSlider;
       this.breakpoints = breakpoints;
       this.scrollByPixels = scrollByPixels;
       this.visible = true;
-      this.portfolioSlider = portfolioSlider;
       this.options = {
           position,
           infinity,
-          slideWidth: this.portfolioSlider ? 100 : Math.floor(100 / this.slidesToShow),
-          activeItemClass,
+          fixedWidth,
+          slideWidth: fixedWidth ? 100 : Math.floor(100 / this.slidesToShow),
           isHorizontal,
-          noFlex
+          noFlex,
+          noFlex4Wrap
       };
   }
 
   init() {
-      this.addGloClass();
-      this.addSlyles();
-      this.highlightActiveItem();
-
-      if(!(this.prev && this.next)) {
-        this.addArrow();
-      }
-      
+      this.addSlyles();   
       this.controlSlider();
       this.renderControls();
-      this.initAdaptive();
-      
+      this.initAdaptive();      
     }
 
   hide() {
@@ -49,10 +38,8 @@ class Slider{
     if (this.prevSelector !== null && this.nextSelector !== null) {
       this.clearControl(this.prevSelector);
       this.clearControl(this.nextSelector);
-      this.prev = document.querySelector(this.prevSelector);
-      this.next = document.querySelector(this.nextSelector);
-      this.prev.style.visibility = 'hidden';
-      this.next.style.visibility = 'hidden';
+      document.querySelector(this.prevSelector).style.visibility = 'hidden';
+      document.querySelector(this.nextSelector).style.visibility = 'hidden';
     }
 
     for (let slide of this.slides) {
@@ -109,13 +96,14 @@ class Slider{
 
     const compareBreakpoints = (a, b) => {
       return +b - +a;
-    }
+    };
+
     const recalculateParams = () => {
       const orderedKeys = Object.keys(this.breakpoints).sort(compareBreakpoints);
       for (let key of orderedKeys) {
         if (window.innerWidth > +key) {
           this.slidesToShow = this.breakpoints[key];
-          this.options.slideWidth = this.portfolioSlider ? 100 : Math.floor(100 / this.slidesToShow);
+          this.options.slideWidth = this.options.fixedWidth ? 100 : Math.floor(100 / this.slidesToShow);
           const style = document.head.querySelector(`[id$="${this.wrapSelector}-style"]`);
           this.updateStyleElement(style);
           break;
@@ -151,7 +139,7 @@ class Slider{
           overflow: hidden !important;
       }`;
 
-      if (!this.repairTypesSlider) {
+      if (!this.options.noFlex4Wrap) {
         elem.textContent += `          ${this.wrapSelector}{
           display: flex !important;
       }`;
@@ -181,8 +169,6 @@ class Slider{
       document.querySelector(this.prevSelector).addEventListener('click', this.prevSlider.bind(this));
       document.querySelector(this.nextSelector).addEventListener('click', this.nextSlider.bind(this));
     }
-    // this.prev.addEventListener('click', this.prevSlider.bind(this));
-    // this.next.addEventListener('click', this.nextSlider.bind(this));
   }
 
   prevSlider() {
@@ -192,10 +178,8 @@ class Slider{
               this.options.position = this.slides.length - this.slidesToShow;
           }
           this.updateSlideVisibility(`translate${this.options.isHorizontal ? "X" : "Y"}(-${this.scrollByPixels !== null ? this.scrollByPixels.step * this.options.position + "px" : this.options.position * this.options.slideWidth + "%"})`);
-          //this.updateSlideVisibility(`translate${this.options.isHorizontal ? "X" : "Y"}(-${this.options.position * this.options.slideWidth}%)`);
       }
 
-      this.highlightActiveItem();
       this.renderControls();
   }
 
@@ -207,9 +191,7 @@ class Slider{
           }
 
           this.updateSlideVisibility(`translate${this.options.isHorizontal ? "X" : "Y"}(-${this.scrollByPixels !== null ? this.scrollByPixels.step * this.options.position + "px" : this.options.position * this.options.slideWidth + "%"})`);
-          //this.updateSlideVisibility(`translate${this.options.isHorizontal ? "X" : "Y"}(-${this.options.position * this.options.slideWidth}%)`);
 
-          this.highlightActiveItem();
           this.renderControls();
       }
   }
@@ -262,20 +244,6 @@ class Slider{
       }
     }
   }
-
-  highlightActiveItem() {
-    if (this.options.activeItemClass !== '') {
-      for (let slide of this.slides) {
-        slide.classList.remove(this.options.activeItemClass);
-      }
-
-      this.slides[this.options.position].classList.add(this.options.activeItemClass);
-    }
-  }
-
-  addArrow() {
-
-  }
 }
 
 const initSliders = () => {
@@ -302,17 +270,6 @@ const initSliders = () => {
     return navSlider;
   };
 
-
-//   const formulaSlider = new Slider({
-//     main: '.formula-slider-wrap',
-//     wrap: '.formula-slider',
-//     next: '#formula-arrow_right',
-//     prev: '#formula-arrow_left',
-//     slideSelector: '.formula-slider__slide',
-//     activeItemClass: 'active-item'
-// });
-//   formulaSlider.init();
-
   const repairTypesSliders = [];
   for (let i = 1; i <= 5; i++) {
     const repairTypesSlider = new Slider({
@@ -323,7 +280,7 @@ const initSliders = () => {
       slideSelector: '.slider-counter-responsive',
       counterSelector: '#repair-counter',
       reviewsSlider: true,
-      repairTypesSlider: true,
+      noFlex4Wrap: true,
       isHorizontal: false
     });
   
@@ -335,25 +292,9 @@ const initSliders = () => {
 
   repairTypesSliders[0].show();
 
-  const repairTypesButtonsContainer = document.querySelector('.nav-list-repair'),
-        repairTypesButtons = repairTypesButtonsContainer.querySelectorAll('.repair-types-nav__item');
-
-  repairTypesButtonsContainer.addEventListener('click', (event) => {
-    if (event.target.closest('.repair-types-nav__item')) {
-      repairTypesSliders.forEach(item => { item.hide(); });
-      for (let i = 0; i < repairTypesButtons.length; i++) {
-        repairTypesButtons[i].classList.remove('active');
-
-        if (event.target.closest('.repair-types-nav__item') === repairTypesButtons[i]) {
-          repairTypesSliders[i].show();
-          repairTypesButtons[i].classList.add('active');
-        }
-      }
-    }
-  });
 
   initNavSlider('.repair-types-nav', '.nav-list-repair', '#nav-arrow-repair-right_base', '#nav-arrow-repair-left_base', '.repair-types-nav__item');
-  initNavSlider('.nav-popup-repair-types', '.nav-list-popup-repair', '#nav-arrow-popup-repair_right', '#nav-arrow-popup-repair_left', '.popup-repair-types-nav__item', false, {"step": 300, "stepCount": 2});
+  initNavSlider('.nav-popup-repair-types', '.nav-list-popup-repair', '#nav-arrow-popup-repair_right', '#nav-arrow-popup-repair_left', '.popup-repair-types-nav__item', false, {"step": 400, "stepCount": 3});
 
   // design types
 
@@ -367,7 +308,7 @@ const initSliders = () => {
       counterSelector: '#designs-counter',
       //slideSelector: '.slider-counter-responsive',
       reviewsSlider: true,
-      repairTypesSlider: true,
+      noFlex4Wrap: true,
       isHorizontal: false
     });
   
@@ -381,43 +322,7 @@ const initSliders = () => {
 
   const designButtonsContainer = document.querySelector('.nav-list-designs'),
         designButtons = designButtonsContainer.querySelectorAll('.designs-nav__item'),
-        previewBlocks = document.querySelectorAll('.preview-block'),
-        previewBlocksContainer = document.querySelector('.designs>.wrapper');
-
-  designButtonsContainer.addEventListener('click', (event) => {
-    if (event.target.closest('.designs-nav__item')) {
-      designSliders.forEach(item => { item.hide(); });
-      previewBlocks.forEach(item => { item.classList.remove('visible')});
-
-      for (let i = 0; i < designButtons.length; i++) {
-        designButtons[i].classList.remove('active');
-
-        if (event.target.closest('.designs-nav__item') === designButtons[i]) {
-          designSliders[i].show();
-          designButtons[i].classList.add('active');
-          previewBlocks[i].classList.add('visible');
-        }
-      }
-    }
-  });
-
-  previewBlocksContainer.addEventListener('click', (event) => {
-    if (event.target.closest('.preview-block')) {
-      for (let i = 0; i < previewBlocks.length; i++) {
-        if (event.target.closest('.preview-block') === previewBlocks[i]) {
-          const previewBlockItems = previewBlocks[i].querySelectorAll('.preview-block__item');
-          for (let j = 0; j < previewBlockItems.length; j++) {
-            previewBlockItems[j].querySelector('.preview-block__item-inner').classList.remove('preview_active');
-            if (event.target.closest('.preview-block__item') === previewBlockItems[j]) {
-              designSliders[i].setPosition(j);
-              previewBlockItems[j].querySelector('.preview-block__item-inner').classList.add('preview_active');
-            }
-          }
-          break;
-        }
-      }
-    }
-  });
+        previewBlocks = document.querySelectorAll('.preview-block');
 
   initNavSlider('.nav-designs', '#designs-list', '#nav-arrow-designs_right', '#nav-arrow-designs_left');
   const designPopupButtonsSlider = initNavSlider('.nav-popup-designs', '#nav-list-popup-designs', '#nav-arrow-popup-designs_right', '#nav-arrow-popup-designs_left', null, true);
@@ -430,9 +335,8 @@ const initSliders = () => {
       next: '#popup_design_right',
       prev: '#popup_design_left',
       counterSelector: '#popup-designs-counter',
-      //slideSelector: '.slider-counter-responsive',
       reviewsSlider: true,
-      repairTypesSlider: true,
+      noFlex4Wrap: true,
       isHorizontal: false
     });
   
@@ -441,38 +345,6 @@ const initSliders = () => {
 
     popupDesignSlider.hide();
   }
-
-  const designPopup = document.querySelector('.popup-design'),
-        designTexts = document.querySelectorAll('.popup-design-text');
-
-  document.addEventListener('click', (event) => {
-    if (event.target.closest('.link-list-designs')) {
-      designPopup.style.visibility = 'visible';
-      popupDesignSliders[0].show();
-      designPopupButtonsSlider.show();
-    } else if (!event.target.closest('.popup-dialog-design') || event.target.closest('.popup-dialog-design>.close')) {
-      designPopup.style.visibility = 'hidden';
-      popupDesignSliders.forEach(item => item.hide());
-      designPopupButtonsSlider.hide();
-    }
-  });  
-
-  const popupDesignButtonsContainer = document.getElementById('nav-list-popup-designs'),
-        popupDesignButtons = popupDesignButtonsContainer.querySelectorAll('.designs-nav__item');
-
-  popupDesignButtonsContainer.addEventListener('click', (event) => {
-    if (event.target.closest('.designs-nav__item')) {
-      popupDesignSliders.forEach(item => item.hide());
-      for (let i = 0; i < popupDesignButtons.length; i++) {
-        if (popupDesignButtons[i] === event.target.closest('.designs-nav__item')) {
-          popupDesignSliders[i].show();
-          designTexts.forEach((item, index) => {
-            item.style.display = index === i ? "block" : 'none';
-          });
-        }
-      }
-    }
-  });
 
   const documentsSlider = new Slider({
     main: '.transparency-slider-wrap',
@@ -500,28 +372,7 @@ const initSliders = () => {
 
   popupDocumentsSlider.init();
   popupDocumentsSlider.hide();
-
-  const docsPopup = document.querySelector('.popup-transparency');
   
-  document.addEventListener('click', (event) => {
-    if (event.target.closest('.transparency-item__img')) {
-      popupDocumentsSlider.show();
-      const docs = document.querySelectorAll('.transparency-item__img');
-      docs.forEach((item, i) => {
-        if (item === event.target.closest('.transparency-item__img')) {
-          popupDocumentsSlider.setPosition(i);
-        }
-      });
-
-      docsPopup.style.visibility = 'visible';
-    } else if (!event.target.closest('.popup-dialog-transparency') || event.target.closest('.popup-dialog-transparency>.close')) {
-      popupDocumentsSlider.hide();
-      docsPopup.style.visibility = 'hidden';
-      popupDocumentsSlider.prev.style.visibility = 'hidden';
-      popupDocumentsSlider.next.style.visibility = 'hidden';
-    }
-  });  
-
   document.querySelector('.popup-transparency-slider-wrap').addEventListener('click', (event) => {
     if (event.target.closest('.popup-arrow_transparency')) {
       documentsSlider.setPosition(popupDocumentsSlider.options.position);
@@ -537,7 +388,7 @@ const initSliders = () => {
     prev: '#portfolio-arrow_left',
     slideSelector: '.portfolio-slider__slide',
     reviewsSlider: true,
-    portfolioSlider: true,
+    fixedWidth: true,
     slidesToShow: 3,
     breakpoints: {"1080" : 3, "900" : 2, "0" : 1},
     infinity: false
@@ -573,36 +424,14 @@ const initSliders = () => {
   portfolioPopupSlider.init();
   portfolioPopupSlider.hide();
 
-  const portfolioPopup = document.querySelector('.popup-portfolio'),
-        texts = document.querySelectorAll('.popup-portfolio-text');
-
-  document.addEventListener('click', (event) => {
-    if (event.target.closest('.portfolio-slider__slide-frame')) {
-      portfolioPopupSlider.show();
-      const docs = document.querySelectorAll('.portfolio-slider__slide-frame');
-
-      docs.forEach((item, i) => {
-        if (item === event.target.closest('.portfolio-slider__slide-frame')) {
-          portfolioPopupSlider.setPosition(i - portfolioPopupSlider.slides.length);
-          texts[i - portfolioPopupSlider.slides.length].style.display = 'flex';
-        }
-      });
-
-      portfolioPopup.style.visibility = 'visible';
-    } else if (!event.target.closest('.popup-dialog-portfolio') || event.target.closest('.popup-dialog-portfolio>.close')) {
-      portfolioPopup.style.visibility = 'hidden';
-      portfolioPopupSlider.hide();
-    }
-  });  
-
   const updateText = () => {
     texts.forEach((item, i) => {
       item.style.display = portfolioPopupSlider.options.position === i ? "flex" : 'none';
     });
   }
   
-  portfolioPopupSlider.prev.addEventListener('click', updateText);
-  portfolioPopupSlider.next.addEventListener('click', updateText);
+  document.querySelector(portfolioPopupSlider.prevSelector).addEventListener('click', updateText);
+  document.querySelector(portfolioPopupSlider.nextSelector).addEventListener('click', updateText);
 
   // reviews
 
@@ -633,26 +462,6 @@ const initSliders = () => {
 
   initNavSlider('.nav-scheme', '#scheme-list', '#nav-arrow-scheme_right', '#nav-arrow-scheme_left', '.scheme-nav__item');
 
-  const schemeButtonsContainer = document.querySelector('#scheme-list'),
-        schemeButtons = schemeButtonsContainer.querySelectorAll('.scheme-nav__item'),
-        schemeDescriptions = document.querySelectorAll('.scheme-description-block');
-
-  schemeButtonsContainer.addEventListener('click', (event) => {
-  
-    if (event.target.closest('.scheme-nav__item')) {
-      schemeButtons.forEach(item => { item.classList.remove('active')});
-      schemeDescriptions.forEach(item => { item.classList.remove('visible-content-block')});
-
-      for (let i = 0; i < schemeButtons.length; i++) {
-        if (event.target.closest('.scheme-nav__item') === schemeButtons[i]) {
-          schemeButtons[i].classList.add('active');
-          schemeDescriptions[i].classList.add('visible-content-block');
-          schemesSlider.setPosition(i);
-        }
-      }
-    }
-  });
-
   // partners
 
   const partnersSlider = new Slider({
@@ -666,6 +475,134 @@ const initSliders = () => {
 });
 
     partnersSlider.init();
+
+    // event listener
+
+  const repairTypesButtonsContainer = document.querySelector('.nav-list-repair'),
+        repairTypesButtons = repairTypesButtonsContainer.querySelectorAll('.repair-types-nav__item'),
+        schemeButtonsContainer = document.querySelector('#scheme-list'),
+        schemeButtons = schemeButtonsContainer.querySelectorAll('.scheme-nav__item'),
+        schemeDescriptions = document.querySelectorAll('.scheme-description-block'),
+        portfolioPopup = document.querySelector('.popup-portfolio'),
+        texts = document.querySelectorAll('.popup-portfolio-text'),
+        docsPopup = document.querySelector('.popup-transparency'),
+        designPopup = document.querySelector('.popup-design'),
+        designTexts = document.querySelectorAll('.popup-design-text'),
+        popupDesignButtonsContainer = document.getElementById('nav-list-popup-designs'),
+        popupDesignButtons = popupDesignButtonsContainer.querySelectorAll('.designs-nav__item');
+
+
+    document.addEventListener('click', (event) => {
+      if (event.target.closest('.link-list-designs')) {
+        designPopup.style.visibility = 'visible';
+        popupDesignSliders[0].show();
+        designPopupButtonsSlider.show();
+      } else if (!event.target.closest('.popup-dialog-design') || event.target.closest('.popup-dialog-design>.close')) {
+        designPopup.style.visibility = 'hidden';
+        popupDesignSliders.forEach(item => item.hide());
+        designPopupButtonsSlider.hide();
+      }
+  
+      if (event.target.closest('.transparency-item__img')) {
+        popupDocumentsSlider.show();
+        const docs = document.querySelectorAll('.transparency-item__img');
+        docs.forEach((item, i) => {
+          if (item === event.target.closest('.transparency-item__img')) {
+            popupDocumentsSlider.setPosition(i);
+          }
+        });
+  
+        docsPopup.style.visibility = 'visible';
+      } else if (!event.target.closest('.popup-dialog-transparency') || event.target.closest('.popup-dialog-transparency>.close')) {
+        popupDocumentsSlider.hide();
+        docsPopup.style.visibility = 'hidden';
+      }
+  
+      if (event.target.closest('.portfolio-slider__slide-frame')) {
+        portfolioPopupSlider.show();
+        const docs = document.querySelectorAll('.portfolio-slider__slide-frame');
+  
+        docs.forEach((item, i) => {
+          if (item === event.target.closest('.portfolio-slider__slide-frame')) {
+            portfolioPopupSlider.setPosition(i - portfolioPopupSlider.slides.length);
+            texts[i - portfolioPopupSlider.slides.length].style.display = 'flex';
+          }
+        });
+  
+        portfolioPopup.style.visibility = 'visible';
+      } else if (!event.target.closest('.popup-dialog-portfolio') || event.target.closest('.popup-dialog-portfolio>.close')) {
+        portfolioPopup.style.visibility = 'hidden';
+        portfolioPopupSlider.hide();
+      }
+
+      if (event.target.closest('.scheme-nav__item')) {
+        schemeButtons.forEach(item => { item.classList.remove('active')});
+        schemeDescriptions.forEach(item => { item.classList.remove('visible-content-block')});
+  
+        for (let i = 0; i < schemeButtons.length; i++) {
+          if (event.target.closest('.scheme-nav__item') === schemeButtons[i]) {
+            schemeButtons[i].classList.add('active');
+            schemeDescriptions[i].classList.add('visible-content-block');
+            schemesSlider.setPosition(i);
+          }
+        }
+      }
+
+      if (event.target.closest('.designs-nav__item')) {
+        popupDesignSliders.forEach(item => item.hide());
+        for (let i = 0; i < popupDesignButtons.length; i++) {
+          if (popupDesignButtons[i] === event.target.closest('.designs-nav__item')) {
+            popupDesignSliders[i].show();
+            designTexts.forEach((item, index) => {
+              item.style.display = index === i ? "block" : 'none';
+            });
+          }
+        }
+      }
+
+      if (event.target.closest('.preview-block')) {
+        for (let i = 0; i < previewBlocks.length; i++) {
+          if (event.target.closest('.preview-block') === previewBlocks[i]) {
+            const previewBlockItems = previewBlocks[i].querySelectorAll('.preview-block__item');
+            for (let j = 0; j < previewBlockItems.length; j++) {
+              previewBlockItems[j].querySelector('.preview-block__item-inner').classList.remove('preview_active');
+              if (event.target.closest('.preview-block__item') === previewBlockItems[j]) {
+                designSliders[i].setPosition(j);
+                previewBlockItems[j].querySelector('.preview-block__item-inner').classList.add('preview_active');
+              }
+            }
+            break;
+          }
+        }
+      }
+
+      if (event.target.closest('.designs-nav__item')) {
+        designSliders.forEach(item => { item.hide(); });
+        previewBlocks.forEach(item => { item.classList.remove('visible')});
+  
+        for (let i = 0; i < designButtons.length; i++) {
+          designButtons[i].classList.remove('active');
+  
+          if (event.target.closest('.designs-nav__item') === designButtons[i]) {
+            designSliders[i].show();
+            designButtons[i].classList.add('active');
+            previewBlocks[i].classList.add('visible');
+          }
+        }
+      }
+
+      if (event.target.closest('.repair-types-nav__item')) {
+        repairTypesSliders.forEach(item => { item.hide(); });
+        for (let i = 0; i < repairTypesButtons.length; i++) {
+          repairTypesButtons[i].classList.remove('active');
+  
+          if (event.target.closest('.repair-types-nav__item') === repairTypesButtons[i]) {
+            repairTypesSliders[i].show();
+            repairTypesButtons[i].classList.add('active');
+          }
+        }
+      }
+    });  
 };
 
 //initSliders();

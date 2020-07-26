@@ -3,7 +3,6 @@ let repairTypes = [];
 const updatePopupData = (index = 0) => {
   const dataContainer = document.querySelector('.popup-repair-types-content-table__list');
   dataContainer.innerHTML = '';
-  console.log(repairTypes);
 
   for (let item of repairTypes[index]) {
     const tr = document.createElement('tr');
