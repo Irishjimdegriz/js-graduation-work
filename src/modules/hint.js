@@ -27,5 +27,4 @@ const hint = () => {
   initIcons('problems');
 }
 
-hint();
-//export default hint;
+export default hint;

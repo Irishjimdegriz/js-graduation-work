@@ -26,7 +26,8 @@ const burgerMenu = () => {
     if (target.closest('.menu')) {
       popupDialogMenu.style.cssText = `top: 0px; 
                                        right: ${popupDialogMenu.clientWidth}px;
-                                       ${window.innerWidth < 576 ? "transform: translate3d(0,0,0)" : ""}`;
+                                       ${window.innerWidth < 576 ? "transform: translate3d(0,0,0)" : ""};
+                                       visibility:visible`;
     } else {
       if (!target.closest('.popup-dialog-menu') || target.closest('.menu-link') || target.closest('.close-menu')) {
         setStartingPosition(popupDialogMenu);
