@@ -78,6 +78,6 @@ const dataLoad = () => {
   });
 };
 
-dataLoad();
+//dataLoad();
 
-//export default dataLoad;
+export default dataLoad;

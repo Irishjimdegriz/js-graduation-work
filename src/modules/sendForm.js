@@ -6,8 +6,8 @@ const sendForm = () => {
   const statusMessage = document.createElement('div');
   statusMessage.style.cssText = `font-size: 2rem;`;
   formsFeedback.forEach(item => {
-    item.addEventListener('submit', e => {
-      e.preventDefault();
+    item.addEventListener('submit', (event) => {
+      event.preventDefault();
 
       const checkBox = item.querySelector('.checkbox__input');
 
