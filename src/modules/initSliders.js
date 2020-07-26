@@ -53,9 +53,10 @@ class Slider{
       this.next = document.querySelector(this.nextSelector);
       this.prev.style.visibility = 'hidden';
       this.next.style.visibility = 'hidden';
-      //document.querySelector(this.nextSelector).style.visibility = 'hidden';
-      //this.prev
-      //this.next.style.visibility = 'hidden';
+    }
+
+    for (let slide of this.slides) {
+      slide.style.display = 'none';      
     }
   }
 
@@ -67,10 +68,19 @@ class Slider{
   }
 
   show() {
-    this.wrap.style.display = 'block';
+    if (this.wrapSelector === '#nav-list-popup-designs') {
+      this.wrap.style.display = 'flex';
+    } else {
+      this.wrap.style.display = 'block';
+      
+    }
     this.visible = true;
     this.renderControls();
     this.controlSlider();
+
+    for (let slide of this.slides) {
+      slide.style.display = 'block';      
+    }
   }
 
   setPosition(position) {
