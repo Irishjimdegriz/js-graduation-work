@@ -283,15 +283,15 @@ const initSliders = () => {
   };
 
 
-  const formulaSlider = new Slider({
-    main: '.formula-slider-wrap',
-    wrap: '.formula-slider',
-    next: '#formula-arrow_right',
-    prev: '#formula-arrow_left',
-    slideSelector: '.formula-slider__slide',
-    activeItemClass: 'active-item'
-});
-  formulaSlider.init();
+//   const formulaSlider = new Slider({
+//     main: '.formula-slider-wrap',
+//     wrap: '.formula-slider',
+//     next: '#formula-arrow_right',
+//     prev: '#formula-arrow_left',
+//     slideSelector: '.formula-slider__slide',
+//     activeItemClass: 'active-item'
+// });
+//   formulaSlider.init();
 
   const repairTypesSliders = [];
   for (let i = 1; i <= 5; i++) {

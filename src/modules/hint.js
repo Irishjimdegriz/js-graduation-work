@@ -1,10 +1,10 @@
-const hint = () => {
-  const formulaIcons = document.querySelectorAll('.row>.formula-item>.formula-item__icon');
+const initIcons = (selector) => {
+  const formulaIcons = document.querySelectorAll(`.row>.${selector}-item>.${selector}-item__icon`);
   formulaIcons.forEach(item => {
     item.addEventListener('mouseenter', (event) => {
-      event.target.closest('.formula-item').classList.add('active-item');
+      event.target.closest(`.${selector}-item`).classList.add('active-item');
 
-      const popup = event.target.querySelector('.formula-item-popup');
+      const popup = event.target.querySelector(`.${selector}-item-popup`);
 
       if (popup.getBoundingClientRect().top < 0) {
         popup.classList.add('popup-rotated');
@@ -12,14 +12,20 @@ const hint = () => {
       }
     });
     item.addEventListener('mouseleave', (event) => {
-      event.target.closest('.formula-item').classList.remove('active-item');
+      event.target.closest(`.${selector}-item`).classList.remove('active-item');
 
-      const popup = event.target.querySelector('.formula-item-popup');
+      const popup = event.target.querySelector(`.${selector}-item-popup`);
 
       popup.classList.remove('popup-rotated');
       popup.closest('.row').classList.remove('row-popup');
     });
   });
+};
+
+const hint = () => {
+  initIcons('formula');
+  initIcons('problems');
 }
 
-export default hint;
+hint();
+//export default hint;
