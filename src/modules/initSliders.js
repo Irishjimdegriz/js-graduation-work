@@ -231,25 +231,27 @@ class Slider{
   }
 
   updateArrowVisibility() {
-    const prev = document.querySelector(this.prevSelector),
-          next = document.querySelector(this.nextSelector);
+    if (this.prevSelector !== null && this.nextSelector !== null) {
+      const prev = document.querySelector(this.prevSelector),
+            next = document.querySelector(this.nextSelector);
 
 
-    if (!this.options.infinity) {
-      if (this.options.position === 0) {
-        prev.style.visibility = 'hidden';
+      if (!this.options.infinity) {
+        if (this.options.position === 0) {
+          prev.style.visibility = 'hidden';
+        } else {
+          prev.style.visibility = 'visible';
+        }
+
+        if (this.options.position === this.slides.length - this.slidesToShow) {
+          next.style.visibility = 'hidden';
+        } else {
+          next.style.visibility = 'visible';
+        }
       } else {
         prev.style.visibility = 'visible';
-      }
-
-      if (this.options.position === this.slides.length - this.slidesToShow) {
-        next.style.visibility = 'hidden';
-      } else {
         next.style.visibility = 'visible';
       }
-    } else {
-      prev.style.visibility = 'visible';
-      next.style.visibility = 'visible';
     }
   }
 
@@ -585,6 +587,8 @@ const initSliders = () => {
   portfolioPopupSlider.prev.addEventListener('click', updateText);
   portfolioPopupSlider.next.addEventListener('click', updateText);
 
+  // reviews
+
   const reviewsSlider = new Slider({
     main: '.reviews-slider-wrap',
     wrap: '.reviews-slider',
@@ -592,10 +596,47 @@ const initSliders = () => {
     prev: '#reviews-arrow_left',
     slideSelector: '.reviews-slider__slide',
     reviewsSlider: true,
+    isHorizontal: false,
     infinity: false
 });
 
   reviewsSlider.init();
+
+  // schemes
+
+  const schemesSlider = new Slider({
+    main: '.scheme-slider-wrap',
+    wrap: '.scheme-slider',
+    slideSelector: '.scheme-slider__slide',
+    reviewsSlider: true,
+    isHorizontal: false,
+});
+
+  schemesSlider.init();
+
+  initNavSlider('.nav-scheme', '#scheme-list', '#nav-arrow-scheme_right', '#nav-arrow-scheme_left', '.scheme-nav__item');
+
+  const schemeButtonsContainer = document.querySelector('#scheme-list'),
+        schemeButtons = schemeButtonsContainer.querySelectorAll('.scheme-nav__item'),
+        schemeDescriptions = document.querySelectorAll('.scheme-description-block');
+
+  schemeButtonsContainer.addEventListener('click', (event) => {
+  
+    if (event.target.closest('.scheme-nav__item')) {
+      schemeButtons.forEach(item => { item.classList.remove('active')});
+      schemeDescriptions.forEach(item => { item.classList.remove('visible-content-block')});
+
+      for (let i = 0; i < schemeButtons.length; i++) {
+        if (event.target.closest('.scheme-nav__item') === schemeButtons[i]) {
+          schemeButtons[i].classList.add('active');
+          schemeDescriptions[i].classList.add('visible-content-block');
+          schemesSlider.setPosition(i);
+        }
+      }
+    }
+  });
+
+  // partners
 
   const partnersSlider = new Slider({
     main: '.partners>.wrapper',
