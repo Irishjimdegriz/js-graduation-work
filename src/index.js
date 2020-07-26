@@ -14,6 +14,7 @@ import selfRebuildingSlider from './modules/selfRebuildingSlider';
 import consult from './modules/consult';
 import howWeWorkTabs from './modules/howWeWorkTabs';
 import accordeon from './modules/accordeon';
+import sendForm from './modules/sendForm';
 
 phoneAccordeon();
 burgerMenu();
@@ -27,3 +28,4 @@ selfRebuildingSlider();
 consult();
 howWeWorkTabs();
 accordeon();
+sendForm();
