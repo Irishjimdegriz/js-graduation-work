@@ -661,7 +661,8 @@ const initSliders = () => {
     next: '#partners-arrow_right',
     prev: '#partners-arrow_left',
     slideSelector: '.partners-slider__slide',
-    slidesToShow: 3
+    slidesToShow: 3,
+    breakpoints: {"680" : 3, "576" : 2, "0" : 1}
 });
 
     partnersSlider.init();
