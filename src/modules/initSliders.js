@@ -504,11 +504,11 @@ const initSliders = () => {
   const docsPopup = document.querySelector('.popup-transparency');
   
   document.addEventListener('click', (event) => {
-    if (event.target.closest('.transparency-item')) {
+    if (event.target.closest('.transparency-item__img')) {
       popupDocumentsSlider.show();
-      const docs = document.querySelectorAll('.transparency-item');
+      const docs = document.querySelectorAll('.transparency-item__img');
       docs.forEach((item, i) => {
-        if (item === event.target.closest('.transparency-item')) {
+        if (item === event.target.closest('.transparency-item__img')) {
           popupDocumentsSlider.setPosition(i);
         }
       });
@@ -521,6 +521,12 @@ const initSliders = () => {
       popupDocumentsSlider.next.style.visibility = 'hidden';
     }
   });  
+
+  document.querySelector('.popup-transparency-slider-wrap').addEventListener('click', (event) => {
+    if (event.target.closest('.popup-arrow_transparency')) {
+      documentsSlider.setPosition(popupDocumentsSlider.options.position);
+    }
+  });
 
   //portfolio
 
