@@ -4,14 +4,14 @@ const updatePopupData = (index = 0) => {
   const dataContainer = document.querySelector('.popup-repair-types-content-table__list');
   dataContainer.innerHTML = '';
 
-  for (let item of repairTypes[index]) {
+  for (let item in repairTypes[index]) {
     const tr = document.createElement('tr');
     tr.classList = 'mobile-row showHide';
-    tr.innerHTML = `<td class="repair-types-name">${item.typeService}</td>
+    tr.innerHTML = `<td class="repair-types-name">${repairTypes[index][item].typeService}</td>
     <td class="mobile-col-title tablet-hide desktop-hide">Ед.измерения</td>
     <td class="mobile-col-title tablet-hide desktop-hide">Цена за ед.</td>
-    <td class="repair-types-value">${item.units}</sup></td>
-    <td class="repair-types-value">${item.cost}</td>`;
+    <td class="repair-types-value">${repairTypes[index][item].units}</sup></td>
+    <td class="repair-types-value">${repairTypes[index][item].cost}</td>`;
 
     dataContainer.append(tr);
   }

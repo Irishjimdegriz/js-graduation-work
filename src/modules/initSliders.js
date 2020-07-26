@@ -42,9 +42,13 @@ class Slider{
       document.querySelector(this.nextSelector).style.visibility = 'hidden';
     }
 
-    for (let slide of this.slides) {
-      slide.style.display = 'none';      
+    for (let index in this.slides) {
+      this.slides[index].style.display = 'none';
     }
+
+    // for (let slide of this.slides) {
+    //   slide.style.display = 'none';      
+    // }
   }
 
   clearControl(elem) {
@@ -65,9 +69,12 @@ class Slider{
     this.renderControls();
     this.controlSlider();
 
-    for (let slide of this.slides) {
-      slide.style.display = 'block';      
+    for (let index in this.slides) {
+      this.slides[index].style.display = 'block';
     }
+    // for (let slide of this.slides) {
+    //   slide.style.display = 'block';      
+    // }
   }
 
   setPosition(position) {
@@ -100,9 +107,12 @@ class Slider{
 
     const recalculateParams = () => {
       const orderedKeys = Object.keys(this.breakpoints).sort(compareBreakpoints);
-      for (let key of orderedKeys) {
-        if (window.innerWidth > +key) {
-          this.slidesToShow = this.breakpoints[key];
+
+
+
+      for (let key in orderedKeys) {
+        if (window.innerWidth > +orderedKeys[key]) {
+          this.slidesToShow = this.breakpoints[orderedKeys[key]];
           this.options.slideWidth = this.options.fixedWidth ? 100 : Math.floor(100 / this.slidesToShow);
           const style = document.head.querySelector(`[id$="${this.wrapSelector}-style"]`);
           this.updateStyleElement(style);
@@ -200,9 +210,15 @@ class Slider{
     if (this.reviewsSlider) {
       const slides = document.querySelectorAll(this.slideSelector);
 
-      for (let slide of this.slides) {
-        slide.style.transform = styleText;
+
+      for (let index in this.slides) {
+        this.slides[index].transform = styleText;
       }
+  
+
+      // for (let slide of this.slides) {
+      //   slide.style.transform = styleText;
+      // }
     } else {
       this.wrap.style.transform = styleText;
     }

@@ -1,6 +1,14 @@
 'use strict';
 
 import 'nodelist-foreach-polyfill';
+import elementClosest from 'element-closest';
+elementClosest(window);
+import 'formdata-polyfill';
+import { polyfill } from 'es6-promise'; polyfill();
+import 'whatwg-fetch';
+import 'mdn-polyfills/Node.prototype.append';
+import 'es6-symbol';
+import 'iterators-polyfill';
 
 import phoneAccordeon from './modules/phoneAccordeon';
 import burgerMenu from './modules/burgerMenu';
