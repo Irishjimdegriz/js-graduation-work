@@ -1,5 +1,5 @@
 class Slider{
-  constructor({main, wrap, position = 0, next = null, prev = null, slideSelector, counterSelector = null, slidesToShow = 1, infinity = true, activeItemClass = '', reviewsSlider = false, breakpoints = null, repairTypesSlider = false, isHorizontal = true, noFlex = false, scrollByPixels = null}){
+  constructor({main, wrap, position = 0, next = null, prev = null, slideSelector, counterSelector = null, slidesToShow = 1, infinity = true, activeItemClass = '', reviewsSlider = false, breakpoints = null, repairTypesSlider = false, isHorizontal = true, noFlex = false, scrollByPixels = null, portfolioSlider = false}){
       this.main = document.querySelector(main);
       this.mainSelector = main;
       this.wrap = document.querySelector(wrap);
@@ -17,10 +17,11 @@ class Slider{
       this.breakpoints = breakpoints;
       this.scrollByPixels = scrollByPixels;
       this.visible = true;
+      this.portfolioSlider = portfolioSlider;
       this.options = {
           position,
           infinity,
-          slideWidth: Math.floor(100 / this.slidesToShow),
+          slideWidth: this.portfolioSlider ? 100 : Math.floor(100 / this.slidesToShow),
           activeItemClass,
           isHorizontal,
           noFlex
@@ -104,7 +105,7 @@ class Slider{
       for (let key of orderedKeys) {
         if (window.innerWidth > +key) {
           this.slidesToShow = this.breakpoints[key];
-          this.options.slideWidth = Math.floor(100 / this.slidesToShow);
+          this.options.slideWidth = this.portfolioSlider ? 100 : Math.floor(100 / this.slidesToShow);
           const style = document.head.querySelector(`[id$="${this.wrapSelector}-style"]`);
           this.updateStyleElement(style);
           break;
@@ -497,6 +498,37 @@ const initSliders = () => {
       popupDocumentsSlider.next.style.visibility = 'hidden';
     }
   });  
+
+  //portfolio
+
+  const portfolioSlider = new Slider({
+    main: '.portfolio-slider-wrap',
+    wrap: '.portfolio-slider',
+    next: '#portfolio-arrow_right',
+    prev: '#portfolio-arrow_left',
+    slideSelector: '.portfolio-slider__slide',
+    reviewsSlider: true,
+    portfolioSlider: true,
+    slidesToShow: 3,
+    breakpoints: {"1080" : 3, "900" : 2, "0" : 1},
+    infinity: false
+  });
+
+  portfolioSlider.init();
+
+  const portfolioSliderMobile = new Slider({
+    main: '.portfolio-slider-wrap',
+    wrap: '.portfolio-slider-mobile',
+    next: '#portfolio-arrow-mobile_right',
+    prev: '#portfolio-arrow-mobile_left',
+    slideSelector: '.portfolio-slider__slide',
+    counterSelector: '#portfolio-counter',
+    isHorizontal: false,
+    reviewsSlider: true,
+    infinity: false
+  });
+
+  portfolioSliderMobile.init();
   
   const portfolioPopupSlider = new Slider({
     main: '.popup-portfolio-slider-wrap',
@@ -566,5 +598,7 @@ const initSliders = () => {
 
     partnersSlider.init();
 };
+
+//initSliders();
 
 export default initSliders;
