@@ -15,6 +15,7 @@ import consult from './modules/consult';
 import howWeWorkTabs from './modules/howWeWorkTabs';
 import accordeon from './modules/accordeon';
 import sendForm from './modules/sendForm';
+import dataLoad from './modules/dataLoad';
 
 phoneAccordeon();
 burgerMenu();
@@ -29,3 +30,4 @@ consult();
 howWeWorkTabs();
 accordeon();
 sendForm();
+dataLoad();

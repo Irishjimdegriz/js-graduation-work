@@ -200,7 +200,7 @@ class Slider{
   }
 
   nextSlider() {
-      if(this.options.infinity || this.options.position < this.slides.length - this.slidesToShow){
+      if(this.options.infinity || this.options.position < this.slides.length - this.slidesToShow || this.scrollByPixels !== null){
             ++this.options.position;
             if(this.options.position > this.slides.length - this.slidesToShow){
                 this.options.position = 0;
@@ -243,10 +243,18 @@ class Slider{
           prev.style.visibility = 'visible';
         }
 
-        if (this.options.position === this.slides.length - this.slidesToShow) {
-          next.style.visibility = 'hidden';
+        if (this.scrollByPixels !== null) {
+          if (this.options.position === this.scrollByPixels.stepCount) {
+            next.style.visibility = 'hidden';
+          } else {
+            next.style.visibility = 'visible';
+          }
         } else {
-          next.style.visibility = 'visible';
+          if (this.options.position === this.slides.length - this.slidesToShow) {
+            next.style.visibility = 'hidden';
+          } else {
+            next.style.visibility = 'visible';
+          }
         }
       } else {
         prev.style.visibility = 'visible';
@@ -271,7 +279,7 @@ class Slider{
 }
 
 const initSliders = () => {
-  const initNavSlider = (main, wrap, next, prev, slideSelector, fromPopup = false) => {
+  const initNavSlider = (main, wrap, next, prev, slideSelector, fromPopup = false, stepDescription = {"step" : 170, "stepCount" : 3}) => {
     const navSlider = new Slider({
       main,
       wrap,
@@ -282,7 +290,7 @@ const initSliders = () => {
       infinity: false,
       noflex: true,
       breakpoints: {"1024" : 5, "0" : 2},
-      scrollByPixels: {"step": 170, "stepCount": 3}
+      scrollByPixels: {"step": stepDescription.step, "stepCount": stepDescription.stepCount}
     });
 
     navSlider.init();
@@ -345,6 +353,9 @@ const initSliders = () => {
   });
 
   initNavSlider('.repair-types-nav', '.nav-list-repair', '#nav-arrow-repair-right_base', '#nav-arrow-repair-left_base', '.repair-types-nav__item');
+  initNavSlider('.nav-popup-repair-types', '.nav-list-popup-repair', '#nav-arrow-popup-repair_right', '#nav-arrow-popup-repair_left', '.popup-repair-types-nav__item', false, {"step": 300, "stepCount": 2});
+
+  // design types
 
   const designSliders = [];
   for (let i = 1; i <= 5; i++) {
