@@ -1,18 +1,20 @@
 let repairTypes = [];
 
 const updatePopupData = (index = 0) => {
-  const dataContainer = document.querySelector('.popup-repair-types-content-table__list');
+  let dataContainer = document.querySelector('.popup-repair-types-content-table__list');
   dataContainer.innerHTML = '';
 
-  for (let item in repairTypes[index]) {
-    const tr = document.createElement('tr');
-    tr.classList = 'mobile-row showHide';
-    tr.innerHTML = `<td class="repair-types-name">${repairTypes[index][item].typeService}</td>
+  for (let i = 0; i < repairTypes[index].length; i++) {
+    let tr = document.createElement('tr');
+    tr.classList.add('mobile-row');
+    tr.classList.add('showHide');
+
+    tr.innerHTML = `<td class="repair-types-name">${repairTypes[index][i].typeService}</td>
     <td class="mobile-col-title tablet-hide desktop-hide">Ед.измерения</td>
     <td class="mobile-col-title tablet-hide desktop-hide">Цена за ед.</td>
-    <td class="repair-types-value">${repairTypes[index][item].units}</sup></td>
-    <td class="repair-types-value">${repairTypes[index][item].cost}</td>`;
-
+    <td class="repair-types-value">${repairTypes[index][i].units}</sup></td>
+    <td class="repair-types-value">${repairTypes[index][i].cost}</td>`;
+  
     dataContainer.append(tr);
   }
 };
@@ -33,8 +35,8 @@ const dataLoad = () => {
     return response.json();
   })
   .then((response) => {
-
-    const dateContainer = document.querySelector('.popup-repair-types-content__head-date'),
+console.log(response);
+    let dateContainer = document.querySelector('.popup-repair-types-content__head-date'),
           sectionHeadersContainer = document.querySelector('.nav-list-popup-repair');
 
     sectionHeadersContainer.innerHTML = '';
@@ -45,7 +47,7 @@ const dataLoad = () => {
         continue;
       }
 
-      const button = document.createElement('button');
+      let button = document.createElement('button');
       button.className = 'button_o popup-repair-types-nav__item' + (i === 1 ? ' active' : '');
       button.textContent = response[i].title;
 
@@ -57,11 +59,11 @@ const dataLoad = () => {
     updatePopupData();
 
     sectionHeadersContainer.addEventListener('click', (event) => {
-      const pressedButton = event.target.closest('.popup-repair-types-nav__item'),
+      let pressedButton = event.target.closest('.popup-repair-types-nav__item'),
             titleContainer = document.getElementById('switch-inner');
 
       if (pressedButton) {
-        const buttons = sectionHeadersContainer.querySelectorAll('.popup-repair-types-nav__item');
+        let buttons = sectionHeadersContainer.querySelectorAll('.popup-repair-types-nav__item');
 
         for (let index in buttons) {
           if (pressedButton === buttons[index]) {
