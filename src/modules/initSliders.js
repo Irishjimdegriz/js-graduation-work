@@ -375,7 +375,7 @@ const initSliders = () => {
   popupDocumentsSlider.hide();
   
   document.querySelector('.popup-transparency-slider-wrap').addEventListener('click', (event) => {
-    if (event.target.closest('.popup-arrow_transparency')) {
+    if (event.target.closest('.popup-arrow_transparency') && window.innerWidth < 1025) {
       documentsSlider.setPosition(popupDocumentsSlider.options.position);
     }
   });
