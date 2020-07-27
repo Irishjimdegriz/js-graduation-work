@@ -6,20 +6,20 @@ const sendForm = () => {
   const statusMessage = document.createElement('div');
   statusMessage.style.cssText = `font-size: 2rem;`;
 
+const forms = document.querySelectorAll('form');
 
-
-for (let item in document.forms) {
-  document.forms[item].addEventListener('submit', (event) => {
+for (let item = 0; item < forms.length; item++) {
+  forms[item].addEventListener('submit', (event) => {
     event.preventDefault();
 
-    const checkBox = document.forms[item].querySelector('.checkbox__input');
+    const checkBox = forms[item].querySelector('.checkbox__input');
 
     if (checkBox.checked === false) {
       alert('Вы должны дать согласие на обработку персональных данных');
       return;
     }
 
-    const formData = new FormData(document.forms[item]);
+    const formData = new FormData(forms[item]);
     let body = {};
     formData.forEach((value,key) => body[key] = value);
         

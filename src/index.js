@@ -9,6 +9,10 @@ import 'whatwg-fetch';
 import 'mdn-polyfills/Node.prototype.append';
 import 'es6-symbol';
 import 'iterators-polyfill';
+import smoothscroll from 'smoothscroll-polyfill';
+smoothscroll.polyfill();
+import 'node-before-polyfill';
+import 'node-after-polyfill';
 
 import phoneAccordeon from './modules/phoneAccordeon';
 import burgerMenu from './modules/burgerMenu';
@@ -39,3 +43,4 @@ howWeWorkTabs();
 accordeon();
 sendForm();
 dataLoad();
+

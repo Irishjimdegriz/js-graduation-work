@@ -46,9 +46,10 @@ class SelfRebuildingSlider{
     }
     const recalculateParams = () => {
       const orderedKeys = Object.keys(this.breakpoints).sort(compareBreakpoints);
-      for (let key of orderedKeys) {
-        if (window.innerWidth > +key) {
-          this.slidesToShow = this.breakpoints[key];
+
+      for (let i = 0; i < orderedKeys.length; i++) {
+        if (window.innerWidth > +orderedKeys[i]) {
+          this.slidesToShow = this.breakpoints[orderedKeys[i]];
           this.options.slideWidth = this.portfolioSlider ? 100 : Math.floor(100 / this.slidesToShow);
           const style = document.head.querySelector(`[id$="${this.wrapSelector}-style"]`);
           this.updateStyleElement(style);
@@ -152,11 +153,11 @@ class SelfRebuildingSlider{
   }
 
   highlightActiveItem() {
-      for (let slide of this.slides) {
-        slide.classList.remove(this.options.activeItemClass);
-      }
+    for (let i = 0; i < this.slides.length; i++) {
+      this.slides[i].classList.remove(this.options.activeItemClass);
+    }
 
-      this.slides[this.options.position].classList.add(this.options.activeItemClass);
+    this.slides[this.options.position].classList.add(this.options.activeItemClass);
   }
 }
 

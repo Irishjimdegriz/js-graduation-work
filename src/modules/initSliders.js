@@ -42,13 +42,9 @@ class Slider{
       document.querySelector(this.nextSelector).style.visibility = 'hidden';
     }
 
-    for (let index in this.slides) {
-      this.slides[index].style.display = 'none';
+    for (let i = 0; i < this.slides.length; i++) {
+      this.slides[i].style.display = 'none';
     }
-
-    // for (let slide of this.slides) {
-    //   slide.style.display = 'none';      
-    // }
   }
 
   clearControl(elem) {
@@ -69,12 +65,9 @@ class Slider{
     this.renderControls();
     this.controlSlider();
 
-    for (let index in this.slides) {
-      this.slides[index].style.display = 'block';
+    for (let i = 0; i < this.slides.length; i++) {
+      this.slides[i].style.display = 'block';
     }
-    // for (let slide of this.slides) {
-    //   slide.style.display = 'block';      
-    // }
   }
 
   setPosition(position) {
@@ -108,11 +101,9 @@ class Slider{
     const recalculateParams = () => {
       const orderedKeys = Object.keys(this.breakpoints).sort(compareBreakpoints);
 
-
-
-      for (let key in orderedKeys) {
-        if (window.innerWidth > +orderedKeys[key]) {
-          this.slidesToShow = this.breakpoints[orderedKeys[key]];
+      for (let i = 0; i < orderedKeys.length; i++) {
+        if (window.innerWidth > +orderedKeys[i]) {
+          this.slidesToShow = this.breakpoints[orderedKeys[i]];
           this.options.slideWidth = this.options.fixedWidth ? 100 : Math.floor(100 / this.slidesToShow);
           const style = document.head.querySelector(`[id$="${this.wrapSelector}-style"]`);
           this.updateStyleElement(style);
@@ -210,15 +201,9 @@ class Slider{
     if (this.reviewsSlider) {
       const slides = document.querySelectorAll(this.slideSelector);
 
-
-      for (let index in this.slides) {
-        this.slides[index].transform = styleText;
+      for (let i = 0; i < slides.length; i++) {
+        slides[i].transform = styleText;
       }
-  
-
-      // for (let slide of this.slides) {
-      //   slide.style.transform = styleText;
-      // }
     } else {
       this.wrap.style.transform = styleText;
     }
