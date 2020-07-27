@@ -185,11 +185,20 @@ class Slider{
   }
 
   nextSlider() {
+    console.log('1');
       if(this.options.infinity || this.options.position < this.slides.length - this.slidesToShow || this.scrollByPixels !== null){
+    console.log('2');
+
             ++this.options.position;
+    console.log('3');
+
             if(this.options.position > this.slides.length - this.slidesToShow){
+    console.log('4');
+
                 this.options.position = 0;
           }
+
+    console.log(`translate${this.options.isHorizontal ? "X" : "Y"}(-${this.scrollByPixels !== null ? this.scrollByPixels.step * this.options.position + "px" : this.options.position * this.options.slideWidth + "%"})`);
 
           this.updateSlideVisibility(`translate${this.options.isHorizontal ? "X" : "Y"}(-${this.scrollByPixels !== null ? this.scrollByPixels.step * this.options.position + "px" : this.options.position * this.options.slideWidth + "%"})`);
 
@@ -200,9 +209,9 @@ class Slider{
   updateSlideVisibility(styleText) {
     if (this.reviewsSlider) {
       const slides = document.querySelectorAll(this.slideSelector);
-
+console.log(this.slideSelector);
       for (let i = 0; i < slides.length; i++) {
-        slides[i].transform = styleText;
+        slides[i].style.transform = styleText;
       }
     } else {
       this.wrap.style.transform = styleText;
@@ -278,7 +287,7 @@ const initSliders = () => {
       wrap: `.types-repair${i}`,
       next: '#repair-types-arrow_right',
       prev: '#repair-types-arrow_left',
-      slideSelector: '.slider-counter-responsive',
+      slideSelector: '.repair-types-slider__slide',
       counterSelector: '#repair-counter',
       reviewsSlider: true,
       noFlex4Wrap: true,
