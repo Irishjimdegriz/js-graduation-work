@@ -40,8 +40,17 @@ for (let item = 0; item < forms.length; item++) {
       }
       statusMessage.innerHTML = successMessage;
       setTimeout(() => statusMessage.innerHTML = '', 3000);
+
     })
     .catch(error => {console.error(error); statusMessage.innerHTML = errorMessage; setTimeout(() => statusMessage.innerHTML = '', 3000);});
+
+    const inputs = forms[item].querySelectorAll('input');
+
+    for (let j = 0; j < inputs.length; j++) {
+      inputs[j].value = '';
+    }
+  
+    checkBox.checked = false;
   });
 }
 

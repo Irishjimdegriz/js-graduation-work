@@ -616,10 +616,15 @@ const initSliders = () => {
       if (event.target.closest('.link-list-menu') || event.target.closest('.link-list-repair')) {
         popupRepairTypes.show();
         document.querySelector('.nav-list-popup-repair').style.display = 'flex';
+        document.querySelector('.nav-list-popup-repair').style.flexDirection = window.innerWidth > 1024 ? 'column' : 'row';
       } else if (!event.target.closest('.popup-dialog-repair-types') || event.target.closest('.close')) {
         popupRepairTypes.hide();
       }
     });  
+
+    window.addEventListener("resize", () => {
+      document.querySelector('.nav-list-popup-repair').style.flexDirection = window.innerWidth > 1024 ? 'column' : 'row';
+    });
 };
 
 //initSliders();
