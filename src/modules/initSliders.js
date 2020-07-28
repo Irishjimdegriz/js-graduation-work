@@ -70,9 +70,9 @@ class Slider{
     }
   }
 
-  setPosition(position) {
+  setPosition(position, reset = false) {
     this.options.position = position;
-    this.updateSlideVisibility(`translate${this.options.isHorizontal ? "X" : "Y"}(-${this.scrollByPixels !== null ? this.scrollByPixels.step * this.options.position + "px" : this.options.position * this.options.slideWidth + "%"})`);
+    this.updateSlideVisibility(reset === 0 ? '' : `translate${this.options.isHorizontal ? "X" : "Y"}(-${this.scrollByPixels !== null ? this.scrollByPixels.step * this.options.position + "px" : this.options.position * this.options.slideWidth + "%"})`);
     this.renderControls();
   }
     
@@ -185,20 +185,11 @@ class Slider{
   }
 
   nextSlider() {
-    console.log('1');
       if(this.options.infinity || this.options.position < this.slides.length - this.slidesToShow || this.scrollByPixels !== null){
-    console.log('2');
-
             ++this.options.position;
-    console.log('3');
-
             if(this.options.position > this.slides.length - this.slidesToShow){
-    console.log('4');
-
                 this.options.position = 0;
           }
-
-    console.log(`translate${this.options.isHorizontal ? "X" : "Y"}(-${this.scrollByPixels !== null ? this.scrollByPixels.step * this.options.position + "px" : this.options.position * this.options.slideWidth + "%"})`);
 
           this.updateSlideVisibility(`translate${this.options.isHorizontal ? "X" : "Y"}(-${this.scrollByPixels !== null ? this.scrollByPixels.step * this.options.position + "px" : this.options.position * this.options.slideWidth + "%"})`);
 
@@ -209,7 +200,6 @@ class Slider{
   updateSlideVisibility(styleText) {
     if (this.reviewsSlider) {
       const slides = document.querySelectorAll(this.slideSelector);
-console.log(this.slideSelector);
       for (let i = 0; i < slides.length; i++) {
         slides[i].style.transform = styleText;
       }
@@ -304,7 +294,7 @@ const initSliders = () => {
 
 
   initNavSlider('.repair-types-nav', '.nav-list-repair', '#nav-arrow-repair-right_base', '#nav-arrow-repair-left_base', '.repair-types-nav__item');
-  initNavSlider('.nav-popup-repair-types', '.nav-list-popup-repair', '#nav-arrow-popup-repair_right', '#nav-arrow-popup-repair_left', '.popup-repair-types-nav__item', false, {"step": 400, "stepCount": 3});
+  const popupRepairTypes = initNavSlider('.nav-popup-repair-types', '.nav-list-popup-repair', '#nav-arrow-popup-repair_right', '#nav-arrow-popup-repair_left', '.popup-repair-types-nav__item', true, {"step": 400, "stepCount": 3});
 
   // design types
 
@@ -316,7 +306,7 @@ const initSliders = () => {
       next: '#design_right',
       prev: '#design_left',
       counterSelector: '#designs-counter',
-      //slideSelector: '.slider-counter-responsive',
+      slideSelector: '.designs-slider__style-slide',
       reviewsSlider: true,
       noFlex4Wrap: true,
       isHorizontal: false
@@ -334,8 +324,8 @@ const initSliders = () => {
         designButtons = designButtonsContainer.querySelectorAll('.designs-nav__item'),
         previewBlocks = document.querySelectorAll('.preview-block');
 
-  initNavSlider('.nav-designs', '#designs-list', '#nav-arrow-designs_right', '#nav-arrow-designs_left');
-  const designPopupButtonsSlider = initNavSlider('.nav-popup-designs', '#nav-list-popup-designs', '#nav-arrow-popup-designs_right', '#nav-arrow-popup-designs_left', null, true);
+  initNavSlider('.nav-designs', '#designs-list', '#nav-arrow-designs_right', '#nav-arrow-designs_left', '.designs-nav__item_base');
+  const designPopupButtonsSlider = initNavSlider('.nav-popup-designs', '#nav-list-popup-designs', '#nav-arrow-popup-designs_right', '#nav-arrow-popup-designs_left', '.designs-nav__item_popup', true);
 
   const popupDesignSliders = [];
   for (let i = 1; i <= 5; i++) {
@@ -594,9 +584,19 @@ const initSliders = () => {
           designButtons[i].classList.remove('active');
   
           if (event.target.closest('.designs-nav__item') === designButtons[i]) {
+            designSliders[i].setPosition(0, true);
             designSliders[i].show();
             designButtons[i].classList.add('active');
             previewBlocks[i].classList.add('visible');
+
+            const previewBlockItems = previewBlocks[i].querySelectorAll('.preview-block__item');
+            for (let j = 0; j < previewBlockItems.length; j++) {
+              if (j === 0) {
+                previewBlockItems[j].querySelector('.preview-block__item-inner').classList.add('preview_active');
+              } else {
+                previewBlockItems[j].querySelector('.preview-block__item-inner').classList.remove('preview_active');
+              }
+            }
           }
         }
       }
@@ -611,6 +611,13 @@ const initSliders = () => {
             repairTypesButtons[i].classList.add('active');
           }
         }
+      }
+
+      if (event.target.closest('.link-list-menu') || event.target.closest('.link-list-repair')) {
+        popupRepairTypes.show();
+        document.querySelector('.nav-list-popup-repair').style.display = 'flex';
+      } else if (!event.target.closest('.popup-dialog-repair-types') || event.target.closest('.close')) {
+        popupRepairTypes.hide();
       }
     });  
 };

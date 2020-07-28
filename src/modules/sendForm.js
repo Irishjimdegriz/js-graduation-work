@@ -46,7 +46,7 @@ for (let item = 0; item < forms.length; item++) {
 }
 
   const postData = (body) => {
-    return fetch('/server.php', {
+    return fetch('./server.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

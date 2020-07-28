@@ -35,7 +35,6 @@ const dataLoad = () => {
     return response.json();
   })
   .then((response) => {
-console.log(response);
     let dateContainer = document.querySelector('.popup-repair-types-content__head-date'),
           sectionHeadersContainer = document.querySelector('.nav-list-popup-repair');
 
