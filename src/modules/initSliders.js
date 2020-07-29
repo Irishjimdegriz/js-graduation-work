@@ -175,7 +175,7 @@ class Slider{
   prevSlider() {
       if(this.options.infinity || this.options.position > 0){
           --this.options.position;
-          if(this.options.position < 0){
+          if(this.options.position < 0 && this.scrollByPixels === null){
               this.options.position = this.slides.length - this.slidesToShow;
           }
           this.updateSlideVisibility(`translate${this.options.isHorizontal ? "X" : "Y"}(-${this.scrollByPixels !== null ? this.scrollByPixels.step * this.options.position + "px" : this.options.position * this.options.slideWidth + "%"})`);
@@ -185,9 +185,9 @@ class Slider{
   }
 
   nextSlider() {
-      if(this.options.infinity || this.options.position < this.slides.length - this.slidesToShow || this.scrollByPixels !== null){
+      if(this.options.infinity || this.options.position < this.slides.length - this.slidesToShow){
             ++this.options.position;
-            if(this.options.position > this.slides.length - this.slidesToShow){
+            if(this.options.position > this.slides.length - this.slidesToShow && this.scrollByPixels === null){
                 this.options.position = 0;
           }
 
@@ -226,11 +226,26 @@ class Slider{
         }
 
         if (this.scrollByPixels !== null) {
-          if (this.options.position === this.scrollByPixels.stepCount) {
-            next.style.visibility = 'hidden';
-          } else {
-            next.style.visibility = 'visible';
+          const elementInViewport = (el) => {
+            let rect = el.getBoundingClientRect(),
+                windowHeight = (window.innerHeight || document.documentElement.clientHeight),
+                windowWidth = (window.innerWidth || document.documentElement.clientWidth);
+        
+            return (
+                   (rect.left >= 0)
+                && (rect.top >= 0)
+                && ((rect.left + rect.width) <= windowWidth)
+                && ((rect.top + rect.height) <= windowHeight)
+            );
           }
+
+          const children = document.querySelector(this.wrapSelector).children;
+
+         if (elementInViewport(children[children.length - 1])){
+           next.style.visibility = 'hidden';
+         } else {
+           next.style.visibility = 'visible';
+         }
         } else {
           if (this.options.position === this.slides.length - this.slidesToShow) {
             next.style.visibility = 'hidden';
@@ -257,7 +272,7 @@ const initSliders = () => {
       reviewsSlider: true,
       infinity: false,
       noflex: true,
-      breakpoints: {"1024" : 5, "0" : 2},
+      breakpoints: {"1024" : 5, "0" : 0},
       scrollByPixels: {"step": stepDescription.step, "stepCount": stepDescription.stepCount}
     });
 
@@ -548,14 +563,16 @@ const initSliders = () => {
         }
       }
 
-      if (event.target.closest('.designs-nav__item')) {
+      if (event.target.closest('.designs-nav__item_popup')) {
         popupDesignSliders.forEach(item => item.hide());
         for (let i = 0; i < popupDesignButtons.length; i++) {
-          if (popupDesignButtons[i] === event.target.closest('.designs-nav__item')) {
+          popupDesignButtons[i].classList.remove('active');
+          if (popupDesignButtons[i] === event.target.closest('.designs-nav__item_popup')) {
             popupDesignSliders[i].show();
             designTexts.forEach((item, index) => {
               item.style.display = index === i ? "block" : 'none';
             });
+            popupDesignButtons[i].classList.add('active');
           }
         }
       }
@@ -576,14 +593,14 @@ const initSliders = () => {
         }
       }
 
-      if (event.target.closest('.designs-nav__item')) {
+      if (event.target.closest('.designs-nav__item_base')) {
         designSliders.forEach(item => { item.hide(); });
         previewBlocks.forEach(item => { item.classList.remove('visible')});
   
         for (let i = 0; i < designButtons.length; i++) {
           designButtons[i].classList.remove('active');
   
-          if (event.target.closest('.designs-nav__item') === designButtons[i]) {
+          if (event.target.closest('.designs-nav__item_base') === designButtons[i]) {
             designSliders[i].setPosition(0, true);
             designSliders[i].show();
             designButtons[i].classList.add('active');
