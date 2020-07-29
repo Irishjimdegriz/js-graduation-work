@@ -607,6 +607,7 @@ const initSliders = () => {
           repairTypesButtons[i].classList.remove('active');
   
           if (event.target.closest('.repair-types-nav__item') === repairTypesButtons[i]) {
+            repairTypesSliders[i].setPosition(0);
             repairTypesSliders[i].show();
             repairTypesButtons[i].classList.add('active');
           }

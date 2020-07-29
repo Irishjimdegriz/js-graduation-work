@@ -19,6 +19,17 @@ for (let item = 0; item < forms.length; item++) {
       return;
     }
 
+    const nameInput = forms[item].querySelector('[name="name"]');
+    if (nameInput) {
+      const nameRegexp = /^[а-я ]+$/ig;
+
+      if (!nameRegexp.test(nameInput.value)) {
+        alert('Имя может содержать только русские буквы и пробелы');
+        return;
+      }
+    }
+
+
     const formData = new FormData(forms[item]);
     let body = {};
     formData.forEach((value,key) => body[key] = value);
